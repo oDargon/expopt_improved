@@ -1,0 +1,57 @@
+%!PS-Adobe-2.0 EPSF
+%%BoundingBox: 100 360 500 640
+40 dict begin
+/Box {
+  -60 -40 moveto 60 -40 lineto 60 40 lineto -60 40 lineto closepath stroke
+  0 -7 moveto dup stringwidth pop -0.5 mul 0 rmoveto show
+} def
+/Disk {
+  -50 0 moveto
+  -50 -5.52 -27.65 -10 0 -10 curveto 27.65 -10 50 -5.52 50 0 curveto
+  50 5.52 27.65 10 0 10 curveto -27.65 10 -50 5.52 -50 0 curveto
+  stroke
+  gsave 0 -40 translate
+    -50 0 moveto
+    -50 -5.52 -27.65 -10 0 -10 curveto 27.65 -10 50 -5.52 50 0 curveto
+    stroke
+  grestore
+  -50 0 moveto -50 -40 lineto stroke
+  50 0 moveto 50 -40 lineto stroke
+  0 -30 moveto dup stringwidth pop -0.5 mul 0 rmoveto show
+} def
+/Arrow { % x0 y0 len ang forward backward fat Arrow -
+  /fat exch def
+  /back exch def
+  /forw exch def
+  /ang exch def
+  /len exch def
+  gsave translate ang rotate
+    1 setlinewidth 
+    forw { /x1 len 8 sub def } { /x1 len def } ifelse
+    back { /x0 8 def } { /x0 0 def } ifelse
+    fat {
+      gsave 2 setlinewidth x0 0 moveto x1 0 lineto stroke grestore
+      gsave 0.5 setlinewidth 1 setgray x0 1 add 0 moveto x1 1 sub 0 lineto stroke grestore
+    } {
+      x0 0 moveto x1 0 lineto stroke
+    } ifelse
+    forw { gsave len 0 translate -10 -3 moveto 0 0 lineto -10 3 lineto closepath fill grestore } if
+    back { gsave 0 0 translate 180 rotate -10 -3 moveto 0 0 lineto -10 3 lineto closepath fill grestore } if
+  grestore
+} def
+gsave 300 600 translate
+  1 setlinewidth
+  /Helvetica findfont 20 scalefont setfont
+  gsave    0    0 translate (Expopt)     Box  grestore
+  gsave    0 -200 translate (energy.ksh) Box  grestore
+  /Helvetica findfont 10 scalefont setfont
+  gsave  150  -75 translate (BASIS.DAT)  Disk grestore
+  gsave -150  -75 translate (ENERGY.DAT) Disk grestore
+   65    0 100  -35 true false false Arrow
+  -65    0 100 -145 false true false Arrow
+   65 -200 100   35 false true false Arrow
+  -65 -200 100  145 true false false Arrow
+    0  -50 100  -90 true false true  Arrow
+grestore
+end
+showpage

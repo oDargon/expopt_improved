@@ -1,0 +1,25 @@
+
+- is todo
++ is done
+
++ Add gradient threshold
+- Add full hessian to shells
+- Implement get/set hessian for shells
++ Implement hessian guess
++ Improve linesearch in qn
++ Set smallest hessian diagonal to 1.0e-3*max(h[ii])
++ Implement extend functionality
++ Add control of definiteness of hessian.
++ Add exponential generator.
+- Add input driven directions
++ Iteration numbers on 'Step' and 'Grad' output
++ Add ChangeZ keyword
+- Add penalty function
+- Add nodeless functions: z**(2*l+3)/4
++ Allow printing of one shell only
++ Add generator HotPoly
+- Implement Powel's method! in progress.
+- Second to last energy is used as last iteration energy! fix!
+  That is, for the first linesearch!
+- Scale directions by using model hessian
+  or by computing diagonal, which also gives step length!
