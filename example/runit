@@ -1,0 +1,5 @@
+#!/bin/ksh
+X=Mg
+#---
+./expopt < $X.expopt.input > $X.expopt.log 2> $X.expopt.err 
+exit

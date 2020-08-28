@@ -1,0 +1,12 @@
+BEGIN{
+   s=0;
+   n=0;
+}
+{
+   s=s+$1
+   n=n+1
+}
+END{
+   s=s/n
+   printf("%18.10f\n",s) 
+}

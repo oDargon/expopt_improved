@@ -1,0 +1,55 @@
+#ExpOpt-2.0
+#
+# Optimizing Mg basis set
+#
+# Define
+# Print
+# Optimize 0 0 1 2 3 4 5 6 7 8 9
+# SelectShell 0
+# Generator HotTempered
+# Generator Polynomial
+# Generator Unit
+# Generator Exponential
+# Energy
+# Threshold 1.0e-8
+# Charge 12.0
+#===============================================================================
+Threshold 0.01e-6
+Charge  12.0
+Generator HotTempered
+#---
+Define
+ 12  0 17  396804.54279314 83513.83419275 20362.52468726 5661.56927419 1766.91076177
+           609.26409085 228.48111631 91.72535323 38.80283100 17.02601289
+           7.62743679 3.43400543 1.52939839 0.66325137 0.27568564
+           0.10811082 0.03937166
+Define
+ 12  1 12  2741.62197785 764.80839749 247.52853019 90.90166520 37.04578450
+           16.38598506 7.69342163 3.74995587 1.85583278 0.91201926
+           0.43527937 0.19732289
+#---
+Energy
+#---
+#Generator Polynomial
+#Generator Unit
+#Optimize 0 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+#Optimize 1 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+#Optimize 2 0 1 2 3 4 5 6 7 8 9 10 11 12 13
+#Optimize 3 0 1 2 3 4 5 6 7 8
+#---
+#Generator Polynomial
+#Optimize 0 0 1
+#Optimize 1 0 1
+#Optimize 0 0 1
+#Optimize 1 0 1
+#---
+#Generator Polynomial
+#Method Powell
+#Threshold 0.025e-8
+#Method Amoeba
+#Step 0.005
+#Optimize 0 0 1 2 3
+#Optimize 1 0 1 2 3
+#Optimize 0 0 1 2 3
+#Optimize 1 0 1 2 3
+#---
