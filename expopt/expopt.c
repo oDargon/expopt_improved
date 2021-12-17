@@ -12,7 +12,7 @@
 /*          Lund University                                                 */
 /*          Sweden                                                          */
 /* Written: July 1999                                                       */
-/* History:                                                                 */
+/* History: cleanup 2020-2021, V. Veryazov                                  */
 /*                                                                          */
 /****************************************************************************/
 #include <stdio.h>
