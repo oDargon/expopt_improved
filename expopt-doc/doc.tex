@@ -71,7 +71,8 @@ Use \verb+#+ at the start of a line for comments.
 First line is a magic word:\\
 \verb+#ExpOpt-2.0+
 \begin{description}
-\kwditem[ChangeZ] Implemented.
+\kwditem[ChangeZ] 
+  Advanced keyword: Change Z value
 \kwditem[Charge]
   Define the nuclear charge that is to be used in the calculation.
   Note that it is not automatically set the Z value when you define a shell
@@ -86,8 +87,9 @@ First line is a magic word:\\
   defines an s-shell with 6 exponents for nitrogen (Z=7).
 \kwditem[Energy]
   Calculate the energy for the shells currently defined.
-\kwditem[Extend] Implemented.
-\kwditem[Fit] Not implemented.
+\kwditem[Extend]
+  Advanced keyword: two integers are required: a number of a shell, and for how much it should be extended. 
+%\kwditem[Fit] Not implemented.
 \kwditem[Generator]
   Select the generator for optimizing the basis sets.
   the generator can be one of
@@ -120,20 +122,20 @@ First line is a magic word:\\
       $g_3(k)=\delta_{k,n-1}$,
       $g_4(k)=\delta_{k,n-2}$,
       $g_5(k)=\delta_{k,n-3}$ etc assuming that there are $n$ primitive functions.
-  \kwditem[Exponential] %% ???
+  \kwditem[Exponential] Read the exponent value from the input
   \end{description}
 \kwditem[gThreshold]
   Set the value for the norm of the gradient at convergence. Used with the QN method.
-\kwditem[Hessian] Not implemented.
-\kwditem[LineSearch] Not implemented.
+%\kwditem[Hessian] Not implemented.
+%\kwditem[LineSearch] Not implemented.
 \kwditem[Method]
   Select method for optimizing exponents.
   The method can be one of
   \begin{description}
   \kwditem[QN] Implemented, default.
   \kwditem[Amoeba] Implemented.
-  \kwditem[Auto] Not implemented.
-  \kwditem[Powell] Under development.
+%  \kwditem[Auto] Not implemented.
+  \kwditem[Powell] Powell (under development).
   \end{description}
 \kwditem[Optimize]
   Optimize specified shell. Following the keyword is the number of the shell, 0 for s-shell, 1 for p-shell etc.
@@ -142,16 +144,16 @@ First line is a magic word:\\
   \verb+Optimize 1 0 1 2+\\
   will optimize the p-shell in the space of the first three (0, 1, and 2) directions
   defined by the generator.
-\kwditem[OptimizeWithDirections] implemented.
-\kwditem[Penalty] Implemented.
-\kwditem[Print] Implemented.
-\kwditem[PrintDirections] Not implemented.
-\kwditem[Reorder] Not implemented.
-\kwditem[SelectShell] Implemented.
-\kwditem[PrintRaw] Implemented.
-\kwditem[Sort] Not implemented.
-\kwditem[Step] Implemented.
-\kwditem[Threshold] Implemented.
+\kwditem[OptimizeWithDirections] 
+\kwditem[Penalty] 
+\kwditem[Print] 
+%\kwditem[PrintDirections] Not implemented.
+%\kwditem[Reorder] Not implemented.
+\kwditem[SelectShell] 
+\kwditem[PrintRaw] 
+%\kwditem[Sort] Not implemented.
+\kwditem[Step] 
+\kwditem[Threshold] 
   Set the value for the difference in energy between two iterations at convergence.
   Used with the QN method.
 \end{description}

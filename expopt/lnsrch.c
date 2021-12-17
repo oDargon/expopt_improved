@@ -28,7 +28,7 @@ double line_search(double *z, double *s, int n, double *s0, double ethr, FILE *f
 /*--------------------------------------------------------------------------*/
    x[0]=0.0; x[1]=*s0;
    for(k=0; k<2; k++) {
-      for(i=0; i<n; i++) t[i]=z[i]+x[k]*s[i]; e[k]=energy(t);
+      for(i=0; i<n; i++) {t[i]=z[i]+x[k]*s[i];} e[k]=energy(t);
    }
    if(e[0]<e[1]) {
       x[2]=x[1]; x[1]=x[0]; x[0]=x[2];
@@ -41,7 +41,7 @@ double line_search(double *z, double *s, int n, double *s0, double ethr, FILE *f
    k=2;
    while(k<20) {
       x[k]=(1.0+GS)*x[k-1]-GS*x[k-2];
-      for(i=0; i<n; i++) t[i]=z[i]+x[k]*s[i]; e[k]=energy(t);
+      for(i=0; i<n; i++) {t[i]=z[i]+x[k]*s[i];} e[k]=energy(t);
       fprintf(f,"x[%2i]=%15.8f, e[%2i]=%15.8f\n",k,x[k],k,e[k]);
       if(e[k]>e[k-1]) break;
       k++;
@@ -65,12 +65,12 @@ double line_search(double *z, double *s, int n, double *s0, double ethr, FILE *f
             -e[m  ]*(x[m+1]-x[m-1])
             +e[m+1]*(x[m  ]-x[m-1]);
          xm=0.5*p/q;
-         for(i=0; i<n; i++) t[i]=z[i]+xm*s[i]; em=energy(t);
+         for(i=0; i<n; i++) {t[i]=z[i]+xm*s[i];} em=energy(t);
          fprintf(f,"xm=%15.8f, em=%15.8f\n",xm,em);
       }
       if(fabs(x[m+1]-x[m])<fabs(x[m]-x[m-1])) {
          x[k]=(GS*x[m]+x[m-1])/(GS+1.0);
-         for(i=0; i<n; i++) t[i]=z[i]+x[k]*s[i]; e[k]=energy(t);
+         for(i=0; i<n; i++) {t[i]=z[i]+x[k]*s[i];} e[k]=energy(t);
          if(e[k]<e[m]) {
             x[m+1]=x[m]; x[m]=x[k];
             e[m+1]=e[m]; e[m]=e[k];
@@ -80,7 +80,7 @@ double line_search(double *z, double *s, int n, double *s0, double ethr, FILE *f
          }
       } else {
          x[k]=(GS*x[m]+x[m+1])/(GS+1.0);
-         for(i=0; i<n; i++) t[i]=z[i]+x[k]*s[i]; e[k]=energy(t);
+         for(i=0; i<n; i++) {t[i]=z[i]+x[k]*s[i];} e[k]=energy(t);
          if(e[k]<e[m]) {
             x[m-1]=x[m]; x[m]=x[k];
             e[m-1]=e[m]; e[m]=e[k];
@@ -103,7 +103,7 @@ double line_search(double *z, double *s, int n, double *s0, double ethr, FILE *f
       -e[m  ]*(x[m+1]-x[m-1])
       +e[m+1]*(x[m  ]-x[m-1]);
    xm=0.5*p/q;
-   for(i=0; i<n; i++) t[i]=z[i]+xm*s[i]; em=energy(t);
+   for(i=0; i<n; i++) {t[i]=z[i]+xm*s[i];} em=energy(t);
    fprintf(f,"xm=%16.10f, em=%16.10f\n",xm,em);
 /*--------------------------------------------------------------------------*/
 /* Transfer minimum                                                         */

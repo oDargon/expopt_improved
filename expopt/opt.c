@@ -67,7 +67,7 @@ void optimize(int l, int ind[], int n, FILE *f) {
    if(n==1) {
       powell(x,n,SYS.ethr,f);
       fprintf(f,"After powell: ");
-      for(k=0; k<n; k++) fprintf(f,"%12.6f ",x[k]); fprintf(f,"\n");
+      for(k=0; k<n; k++) {fprintf(f,"%12.6f ",x[k]);} fprintf(f,"\n");
    } else if(SYS.method==OPT_AUTO) {
       fprintf(stderr,"Error: Internal error in routine optimize\n");
       fprintf(stderr,"       Method 'Auto' not yet implemented!\n");
@@ -75,19 +75,20 @@ void optimize(int l, int ind[], int n, FILE *f) {
    } else if(SYS.method==OPT_AMOEBA) {
       amoeba(x,n,SYS.ethr,f);
       fprintf(f,"After amoeba: ");
-      for(k=0; k<n; k++) fprintf(f,"%12.6f ",x[k]); fprintf(f,"\n");
+      for(k=0; k<n; k++) {fprintf(f,"%12.6f ",x[k]);} fprintf(f,"\n");
    } else if(SYS.method==OPT_POWELL) {
       powell(x,n,SYS.ethr,f);
       fprintf(f,"After powell: ");
-      for(k=0; k<n; k++) fprintf(f,"%12.6f ",x[k]); fprintf(f,"\n");
+      for(k=0; k<n; k++) {fprintf(f,"%12.6f ",x[k]);} fprintf(f,"\n");
    } else if(SYS.method==OPT_QN) {
       quasi_newton(x,n,SYS.ethr,SYS.gthr,f);
       fprintf(f,"After quasi newton: ");
-      for(k=0; k<n; k++) fprintf(f,"%12.6f ",x[k]); fprintf(f,"\n");
+      for(k=0; k<n; k++) {fprintf(f,"%12.6f ",x[k]);} fprintf(f,"\n");
    } else if(SYS.method==OPT_QN2) {
-      qn2(x,n,SYS.ethr,SYS.gthr,f);
-      fprintf(f,"After qn2: ");
-      for(k=0; k<n; k++) fprintf(f,"%12.6f ",x[k]); fprintf(f,"\n");
+/*      qn2(x,n,SYS.ethr,SYS.gthr,f); */
+      fprintf(f,"qn2 is not yet implemented: ");
+      for(k=0; k<n; k++) {fprintf(f,"%12.6f ",x[k]);} fprintf(f,"\n");
+      exit(1);
    } else {
       fprintf(stderr,"Error: Internal error in routine optimize\n");
       fprintf(stderr,"       Illegal method type!\n");

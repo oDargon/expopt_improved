@@ -1,7 +1,7 @@
 CC     = gcc
 CFLAGS = -Wall -ggdb
-SRC    = expopt.c inpctl.c energy.c opt.c amoeba.c mkscale.c qn.c qn2.c \
-         lnsrch.c gauss.c sortxy.c findmin.c guessian.c extend.c \
+SRC    = expopt.c inpctl.c energy.c opt.c amoeba.c mkscale.c qn.c \
+         lnsrch.c gauss.c findmin.c guessian.c extend.c \
          chkhess.c jacobi.c powell.c chklindep.c
 OBJ    = ${SRC:.c=.o}
 HDR    = expopt.h

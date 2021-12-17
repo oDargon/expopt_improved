@@ -42,7 +42,7 @@ void guessian(double B[], double diag[], int nd, FILE *f) {
    }
    fprintf(f,"Guessed primitive hessian\n");
    for(i=0; i<np; i++) {
-      for(j=0; j<np; j++) fprintf(f,"%7.4f ",H[i+np*j]); fprintf(f,"\n");
+      for(j=0; j<np; j++) {fprintf(f,"%7.4f ",H[i+np*j]);} fprintf(f,"\n");
    }
 /*--------------------------------------------------------------------------*/
 /* Build transformation vectors.                                            */
@@ -57,7 +57,7 @@ void guessian(double B[], double diag[], int nd, FILE *f) {
    }
    fprintf(f,"Transformation matrix\n");
    for(i=0; i<np; i++) {
-      for(p=0; p<nd; p++) fprintf(f,"%7.4f ",V[i+np*p]); fprintf(f,"\n");
+      for(p=0; p<nd; p++) {fprintf(f,"%7.4f ",V[i+np*p]);} fprintf(f,"\n");
    }
 /*--------------------------------------------------------------------------*/
 /* Transform hessian. Done as O(n4), can be done as O(n3).                  */
@@ -75,7 +75,7 @@ void guessian(double B[], double diag[], int nd, FILE *f) {
    }
    fprintf(f,"Transformed hessian\n");
    for(p=0; p<nd; p++) {
-      for(q=0; q<nd; q++) fprintf(f,"%7.4f ",B[p+nd*q]); fprintf(f,"\n");
+      for(q=0; q<nd; q++) {fprintf(f,"%7.4f ",B[p+nd*q]);} fprintf(f,"\n");
    }
 /*--------------------------------------------------------------------------*/
 /* Scale transformed hessian.                                               */
@@ -94,7 +94,7 @@ void guessian(double B[], double diag[], int nd, FILE *f) {
    }
    fprintf(f,"Scaled transformed hessian\n");
    for(p=0; p<nd; p++) {
-      for(q=0; q<nd; q++) fprintf(f,"%7.4f ",B[p+nd*q]); fprintf(f,"\n");
+      for(q=0; q<nd; q++) {fprintf(f,"%7.4f ",B[p+nd*q]);} fprintf(f,"\n");
    }
 /*--------------------------------------------------------------------------*/
 /* Deallocate.                                                              */

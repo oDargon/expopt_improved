@@ -47,9 +47,9 @@ double check_lin_dep(double M[MAX_DIR][MAX_DIR], int n, FILE *f) {
       for(j=0; j<i+1; j++) { fprintf(f," %12.6f",S[ind]); ind++; } fprintf(f,"\n");
    }
    fprintf(f,"\n");
-   for(i=0; i<n; i++) fprintf(f," %12.6f",S[i*(i+3)/2]); fprintf(f,"\n");
+   for(i=0; i<n; i++) {fprintf(f," %12.6f",S[i*(i+3)/2]);} fprintf(f,"\n");
    for(i=0; i<n; i++) {
-      for(j=0; j<n; j++) fprintf(f," %12.6f",U[i+n*j]); fprintf(f,"\n");
+      for(j=0; j<n; j++) {fprintf(f," %12.6f",U[i+n*j]);} fprintf(f,"\n");
    }
 /*--------------------------------------------------------------------------*/
 /* Find smallest eigenvalue.                                                */

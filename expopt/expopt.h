@@ -65,12 +65,11 @@ extern double  energy(double *);
 extern void    optimize(int, int *, int, FILE *);
 extern void    amoeba(double *, int, double, FILE *);
 extern void    quasi_newton(double *, int, double, double, FILE *);
-extern void    qn2(double *, int, double, double, FILE *);
+/* extern void    qn2(double *, int, double, double, FILE *); */
 extern void    powell(double *, int, double, FILE *);
 extern double  make_scale(int, double *);
 extern void    gauss(double *, double *, double *, int);
 extern double  line_search(double *, double *, int n, double *, double, FILE *);
-extern void    sort_xy(double *, double *, int);
 extern int     find_min(double *, int);
 extern void    guessian(double *, double *, int, FILE *);
 extern void    extend(int, int, FILE *);

@@ -72,7 +72,7 @@ void powell(double z[], int n, double thr, FILE *f) {
       fprintf(f,"...\n");
       for(k=0; k<n+1; k++) { /* loop over all directions */
          fprintf(f,"Line search in direction %2i (%.8f)",k,D[k].h);
-         for(i=0; i<n; i++) fprintf(f," %12.6f",D[k].x[i]); fprintf(f,"\n");
+         for(i=0; i<n; i++) {fprintf(f," %12.6f",D[k].x[i]);} fprintf(f,"\n");
          if(fabs(D[k].h)<1.0e-4) {
             if(D[k].h<0.0) D[k].h=-1.0e-4;
             else           D[k].h= 1.0e-4;

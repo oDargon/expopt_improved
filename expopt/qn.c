@@ -93,9 +93,9 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
          P[iter].h[j]=(e_p-2.0*e_0+e_m)/(d*d);
       }
       fprintf(f,"Gradient:");
-      for(i=0; i<n; i++) fprintf(f,"%10.6f ",P[iter].g[i]); fprintf(f,"\n");
+      for(i=0; i<n; i++) {fprintf(f,"%10.6f ",P[iter].g[i]);} fprintf(f,"\n");
       fprintf(f,"Hessian: ");
-      for(i=0; i<n; i++) fprintf(f,"%10.6f ",P[iter].h[i]); fprintf(f,"\n");
+      for(i=0; i<n; i++) {fprintf(f,"%10.6f ",P[iter].h[i]);} fprintf(f,"\n");
       gnorm=0.0;
       for(i=0; i<n; i++) gnorm=gnorm+P[iter].g[i]*P[iter].g[i];
       gnorm=sqrt(gnorm);
@@ -123,9 +123,9 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
                for(j=0; j<n; j++) p=p+B[i+n*j]*(P[k].x[j]-P[k-1].x[j]);
                Bd[i]=p;
             }
-	    printf("g:  "); for(i=0; i<n; i++) printf("%10.6f ",(P[k].g[i]-P[k-1].g[i])); printf("\n");
-	    printf("d:  "); for(i=0; i<n; i++) printf("%10.6f ",(P[k].x[i]-P[k-1].x[i])); printf("\n");
-	    printf("Bd: "); for(i=0; i<n; i++) printf("%10.6f ",Bd[i]); printf("\n");
+	    printf("g:  "); for(i=0; i<n; i++) {printf("%10.6f ",(P[k].g[i]-P[k-1].g[i]));} printf("\n");
+	    printf("d:  "); for(i=0; i<n; i++) {printf("%10.6f ",(P[k].x[i]-P[k-1].x[i]));} printf("\n");
+	    printf("Bd: "); for(i=0; i<n; i++) {printf("%10.6f ",Bd[i]);} printf("\n");
             gd=0.0;
             dBd=0.0;
             for(i=0; i<n; i++) {
@@ -144,14 +144,14 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
          }
          fprintf(f,"Hessian:\n");
          for(i=0; i<n; i++) {
-            for(j=0; j<n; j++) fprintf(f,"%10.6f ",B[i+n*j]); fprintf(f,"\n");
+            for(j=0; j<n; j++) {fprintf(f,"%10.6f ",B[i+n*j]);} fprintf(f,"\n");
          }
       }
       if(1) check_hessian(B,n);
       gauss(B,s,P[iter].g,n);
       for(i=0; i<n; i++) s[i]=-s[i];
       fprintf(f,"Step:    ");
-      for(i=0; i<n; i++) fprintf(f,"%10.6f ",s[i]); fprintf(f,"\n");
+      for(i=0; i<n; i++) {fprintf(f,"%10.6f ",s[i]);} fprintf(f,"\n");
 
 #ifdef NEWLS
       sg=0.0; for(i=0; i<n; i++) sg=sg+P[iter].g[i]*s[i];
@@ -294,3 +294,53 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
 /*--------------------------------------------------------------------------*/
    fprintf(f,"Exiting quasi_newton\n");
 }
+#ifdef UNDER_CONST
+/*==========================================================================*/
+void qn2(double x[], int n, double ethr, double gthr, FILE *f) {
+   point   P[MAX_ITER+1];
+   double *B;
+   double *t;
+   double  e0,ep,em;
+   double  d;
+   int     i;
+   fprintf(f,"Entering qn2\n");
+/*--------------------------------------------------------------------------*/
+/*                                                                          */
+/*--------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------*/
+/* Allocate.                                                                */
+/*--------------------------------------------------------------------------*/
+/* ... allocate P.x, etc */
+   B=(double *)malloc(n*n*sizeof(double));
+   t=(double *)malloc(n*sizeof(double));
+/*--------------------------------------------------------------------------*/
+/* Initialize.                                                              */
+/*--------------------------------------------------------------------------*/
+   for(i=0; i<n; i++) P[0].x[i]=x[i]; /* initial point */
+   for(i=0; i<n; i++) t[i]=P[0].x[i]; /* temporary point */
+   e0=energy(t);
+   d=0.01;
+   for(i=0; i<n; i++) {               /* scale directions to get unit hessian */
+      t[i]=t[i]+1.0*d; ep=energy(t);
+      t[i]=t[i]-2.0*d; em=energy(t);
+      t[i]=t[i]+1.0*d;
+      printf("e0=%.6f\n",e0);
+      printf("ep=%.6f\n",ep);
+      printf("em=%.6f\n",em);
+   }
+/*--------------------------------------------------------------------------*/
+/* Iterate.                                                                 */
+/*--------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------*/
+/* Deallocate vertices.                                                     */
+/*--------------------------------------------------------------------------*/
+   free(t);
+   free(B);
+/*--------------------------------------------------------------------------*/
+/*                                                                          */
+/*--------------------------------------------------------------------------*/
+   fprintf(f,"Exiting qn2\n");
+   fprintf(stderr,"qn2 not yet implemented, exiting!\n");
+   exit(1);
+}
+#endif

@@ -169,8 +169,8 @@ void input_control(FILE *iu, FILE *ou) {
             SYS.method=OPT_POWELL;
          } else if(strcmp(tok,"QN")==0) {
             SYS.method=OPT_QN;
-         } else if(strcmp(tok,"QN2")==0) {
-            SYS.method=OPT_QN2;
+/*         } else if(strcmp(tok,"QN2")==0) {
+            SYS.method=OPT_QN2; */
          } else {
             fprintf(stderr,"Illegal method '%s'\n",tok);
             exit(1);
