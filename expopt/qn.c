@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include "expopt.h"
 #define GUESS
 #define NEWLS
@@ -38,6 +39,9 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    double  trust;
    double  p;
    double  e_0_prev,predicted_prev,rho;
+   double  e_log_prev;
+   int     fevals_iter,fevals_ls;
+   time_t  t_iter;
    int     iter,k0;
    int     np;
    int     i,j,k;
@@ -77,9 +81,12 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    fprintf(f,"Iter       -------------   -------------   -------------  -----------   ----------   ----------\n");
    e_0_prev=1.0e12;
    predicted_prev=1.0;
+   e_log_prev=1.0e12;
    iter=0;
    if(!SYS.no_linesearch) e_0=energy(P[0].x);
    while(iter<MAX_ITER) {
+      fevals_iter=SYS.fnc_eval;
+      t_iter=time(NULL);
       for(i=0; i<n; i++) t[i]=P[iter].x[i];
       if(SYS.no_linesearch) {
          e_0=energy(P[iter].x);
@@ -269,7 +276,8 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
          for(i=0; i<n; i++) P[iter+1].x[i]=P[iter].x[i]+lambda*s[i];
          e_1=ener[k];
       }
-      
+      fevals_ls=np-1;
+
 #else
       for(i=0; i<n; i++) P[iter+1].x[i]=P[iter].x[i]+s[i];
       e_1=energy(P[iter+1].x);
@@ -304,6 +312,15 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
          fprintf(f,"Iter %2i: %15.8f %12.8f %12.8f\n",iter,e_0,gnorm,lambda);
       else
          fprintf(f,"Iter %2i: %15.8f %15.8f %15.8f %12.8f %12.8f %12.8f\n",iter,e_0,e_est,e_1,e_1-e_0,gnorm,lambda);
+      if(SYS.no_linesearch)
+         fprintf(SYS.logfile, "%4i  %6i  %8.1f  %14.8f  %12.8f  %10.6f  %8.4f  %8.4f\n",
+            iter, SYS.fnc_eval-fevals_iter, difftime(time(NULL),t_iter),
+            e_0, (e_log_prev<1.0e11 ? e_0-e_log_prev : 0.0), gnorm, lambda, trust);
+      else
+         fprintf(SYS.logfile, "%4i  %6i  %6i  %8.1f  %14.8f  %12.8f  %10.6f  %8.4f\n",
+            iter, SYS.fnc_eval-fevals_iter, fevals_ls, difftime(time(NULL),t_iter),
+            e_0, (e_log_prev<1.0e11 ? e_0-e_log_prev : 0.0), gnorm, lambda);
+      e_log_prev=e_0;
       if(SYS.no_linesearch ? (gnorm<gthr) : ((e_0-e_1)<ethr && gnorm<gthr)) {
          fprintf(f,"Converged\n");
          break;

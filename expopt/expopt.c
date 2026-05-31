@@ -47,6 +47,8 @@ int main(int argc, char *argv[]) {
    SYS.printraw        = 0;
    SYS.contract_frozen = 0;
    SYS.no_linesearch   = 0;
+   SYS.opt_count       = 0;
+   SYS.logfile         = NULL;
    for(i=0; i<=MAX_LQN; i++) {
       SYS.basis[i].Z=0;
       SYS.basis[i].l=0;

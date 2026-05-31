@@ -53,6 +53,8 @@ typedef struct {
    int     printraw;
    int     contract_frozen;
    int     no_linesearch;
+   int     opt_count;
+   FILE   *logfile;
    shell   basis[MAX_LQN+1];
    double  directions[MAX_DIR*MAX_DIR];
 } sysdef;
@@ -76,6 +78,7 @@ extern double  line_search(double *, double *, int n, double *, double, FILE *);
 extern int     find_min(double *, int);
 extern void    guessian(double *, double *, int, FILE *);
 extern void    extend(int, int, FILE *);
+extern void    OptimizationLog(int);
 extern void    check_hessian(double *, int);
 extern void    jacobi(double *, double *, int, int);
 extern double  check_lin_dep(double M[MAX_DIR][MAX_DIR], int , FILE *);

@@ -64,6 +64,8 @@ void optimize(int l, int ind[], int n, FILE *f) {
    for(k=0; k<n; k++) SYS.index[k]=ind[k];
    SYS.n_dir=n;
 
+   OptimizationLog(SYS.opt_count++);
+
    if(n==1) {
       powell(x,n,SYS.ethr,f);
       fprintf(f,"After powell: ");
@@ -132,6 +134,10 @@ void optimize(int l, int ind[], int n, FILE *f) {
    free(SYS.index); SYS.index=NULL;
    free(x); x=NULL;
    SYS.active=-1;
+   if(SYS.logfile!=NULL && SYS.logfile!=stdout) {
+      fclose(SYS.logfile);
+      SYS.logfile=NULL;
+   }
 /*--------------------------------------------------------------------------*/
 /*                                                                          */
 /*--------------------------------------------------------------------------*/
