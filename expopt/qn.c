@@ -40,8 +40,8 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    double  p;
    double  e_0_prev,predicted_prev,rho;
    double  e_log_prev;
-   int     fevals_iter,fevals_ls;
-   time_t  t_iter;
+   int     fevals_iter,fevals_ls,fevals_start;
+   time_t  t_iter,t_start;
    int     iter,k0;
    int     np;
    int     i,j,k;
@@ -82,6 +82,8 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    e_0_prev=1.0e12;
    predicted_prev=1.0;
    e_log_prev=1.0e12;
+   fevals_start=SYS.fnc_eval;
+   t_start=time(NULL);
    iter=0;
    if(!SYS.no_linesearch) e_0=energy(P[0].x);
    while(iter<MAX_ITER) {
@@ -324,10 +326,19 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
       e_log_prev=e_0;
       if(SYS.no_linesearch ? (gnorm<gthr) : ((e_0-e_1)<ethr && gnorm<gthr)) {
          fprintf(f,"Converged\n");
+         fprintf(SYS.logfile,"Converged  fevals=%i  wall=%.1fs  final_E=%.8f\n",
+            SYS.fnc_eval-fevals_start, difftime(time(NULL),t_start), e_0);
+         fflush(SYS.logfile);
          break;
       };
       if(!SYS.no_linesearch) e_0=e_1;
       iter++;
+   }
+   if(iter>=MAX_ITER) {
+      fprintf(f,"Max iterations reached\n");
+      fprintf(SYS.logfile,"MaxIter  fevals=%i  wall=%.1fs  final_E=%.8f\n",
+         SYS.fnc_eval-fevals_start, difftime(time(NULL),t_start), e_0);
+      fflush(SYS.logfile);
    }
    e_0=e_1;
 /*--------------------------------------------------------------------------*/
