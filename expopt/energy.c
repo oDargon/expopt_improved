@@ -41,8 +41,8 @@ double energy(double *s) {
                fprintf(f,"%.8f\n",z);
             }
             if(frozen) {
-               for(k=0; k<nc; k++) {
-                  for(m=0; m<n; m++) fprintf(f,"%.8f ",SYS.basis[l].c[k*n+m]);
+               for(m=0; m<n; m++) {
+                  for(k=0; k<nc; k++) fprintf(f,"%.8f ",SYS.basis[l].c[k*n+m]);
                   fprintf(f,"\n");
                }
             } else {

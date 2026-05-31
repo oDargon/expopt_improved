@@ -69,7 +69,7 @@ void input_control(FILE *iu, FILE *ou) {
          SYS.basis[l].c=(double *)malloc(m*n*sizeof(double));
          for(k=0; k<n; k++) {
             tok=strtok(NULL," \n");
-            if(tok==NULL) {
+            while(tok==NULL) {
                GETLINE
                tok=strtok(line," \n");
             }
@@ -77,7 +77,7 @@ void input_control(FILE *iu, FILE *ou) {
          }
          for(k=0; k<m*n; k++) {
             tok=strtok(NULL," \n");
-            if(tok==NULL) {
+            while(tok==NULL) {
                GETLINE
                tok=strtok(line," \n");
             }
