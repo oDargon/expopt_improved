@@ -2,6 +2,7 @@
 /*                                                                          */
 /****************************************************************************/
 #include <stdio.h>
+#include <stdlib.h>
 #include "expopt.h"
 
 static const char *shell_sym[] = {"s","p","d","f","g","h","i","k","l","m"};

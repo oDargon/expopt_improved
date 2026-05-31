@@ -20,7 +20,7 @@ typedef struct {
 } JobRecord;
 static JobRecord *job_table  = NULL;
 static int        jobs_init   = 0;
-static char       run_dir[4096-32];
+static char       run_dir[4096-64];
 /*--------------------------------------------------------------------------*/
 static void init_jobs(void) {
    int k;
