@@ -19,7 +19,7 @@ line_no++;
 /*                                                                          */
 /*==========================================================================*/
 void input_control(FILE *iu, FILE *ou) {
-   char    line[128],*tok;
+   char    line[4096],*tok;
    double  e;
    int     ind[128];
    int     line_no;
@@ -75,19 +75,13 @@ void input_control(FILE *iu, FILE *ou) {
             }
             SYS.basis[l].z[k]=atof(tok);
          }
-         if(m==n) {
-            for(k=0; k<m; k++)
-               for(int j=0; j<n; j++)
-                  SYS.basis[l].c[k*n+j]=(k==j) ? 1.0 : 0.0;
-         } else {
-            for(k=0; k<m*n; k++) {
-               tok=strtok(NULL," \n");
-               if(tok==NULL) {
-                  GETLINE
-                  tok=strtok(line," \n");
-               }
-               SYS.basis[l].c[k]=atof(tok);
+         for(k=0; k<m*n; k++) {
+            tok=strtok(NULL," \n");
+            if(tok==NULL) {
+               GETLINE
+               tok=strtok(line," \n");
             }
+            SYS.basis[l].c[k]=atof(tok);
          }
 /*
    Print current basis set
