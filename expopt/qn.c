@@ -68,7 +68,7 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    d_arr=(double *)malloc(n*sizeof(double));
    h_p  =(int    *)malloc(n*sizeof(int));
    h_m  =(int    *)malloc(n*sizeof(int));
-   all_h=(int    *)malloc(2*n*sizeof(int));
+   all_h=(int    *)malloc((2*n+1)*sizeof(int));
 /*--------------------------------------------------------------------------*/
 /* Initialize.                                                              */
 /*--------------------------------------------------------------------------*/
@@ -97,31 +97,70 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
       fevals_iter=SYS.fnc_eval;
       t_iter=time(NULL);
       for(i=0; i<n; i++) t[i]=P[iter].x[i];
-      if(SYS.no_linesearch) {
-         e_0=energy(P[iter].x);
-         if(iter>0) {
-            rho=(e_0_prev-e_0)/predicted_prev;
-            fprintf(f,"rho=%.6f trust=%.6f\n",rho,trust);
-            if(rho<0.0)       trust*=0.25;
-            else if(rho<0.25) trust*=0.50;
-            else if(rho>0.75) trust=fmin(2.0*trust,2.0);
+      if(SYS.max_jobs>1) {
+         int h_0=-1,bi=0;
+         double *tmp=(double *)malloc(n*sizeof(double));
+         if(SYS.no_linesearch) h_0=energy_prepare(P[iter].x);
+         for(j=0; j<n; j++) {
+            d_arr[j]=sqrt(1.0e-5/B[j+n*j]);
+            for(i=0; i<n; i++) tmp[i]=t[i];
+            tmp[j]+=d_arr[j];
+            h_p[j]=energy_prepare(tmp);
+            for(i=0; i<n; i++) tmp[i]=t[i];
+            tmp[j]-=d_arr[j];
+            h_m[j]=energy_prepare(tmp);
          }
-         e_0_prev=e_0;
+         free(tmp);
+         if(SYS.no_linesearch) all_h[bi++]=h_0;
+         for(j=0; j<n; j++) all_h[bi++]=h_p[j];
+         for(j=0; j<n; j++) all_h[bi++]=h_m[j];
+         energy_run(all_h,bi);
+         if(SYS.no_linesearch) {
+            e_0=energy_collect(h_0);
+            if(iter>0) {
+               rho=(e_0_prev-e_0)/predicted_prev;
+               fprintf(f,"rho=%.6f trust=%.6f\n",rho,trust);
+               if(rho<0.0)       trust*=0.25;
+               else if(rho<0.25) trust*=0.50;
+               else if(rho>0.75) trust=fmin(2.0*trust,2.0);
+            }
+            e_0_prev=e_0;
+         }
+         for(j=0; j<n; j++) {
+            e_p=energy_collect(h_p[j]);
+            e_m=energy_collect(h_m[j]);
+            fprintf(f,"e_p[%i]=%.8f\n",j,e_p);
+            fprintf(f,"e_m[%i]=%.8f\n",j,e_m);
+            P[iter].g[j]=(e_p-e_m)/(2.0*d_arr[j]);
+            P[iter].h[j]=(e_p-2.0*e_0+e_m)/(d_arr[j]*d_arr[j]);
+         }
+      } else {
+         if(SYS.no_linesearch) {
+            e_0=energy(P[iter].x);
+            if(iter>0) {
+               rho=(e_0_prev-e_0)/predicted_prev;
+               fprintf(f,"rho=%.6f trust=%.6f\n",rho,trust);
+               if(rho<0.0)       trust*=0.25;
+               else if(rho<0.25) trust*=0.50;
+               else if(rho>0.75) trust=fmin(2.0*trust,2.0);
+            }
+            e_0_prev=e_0;
+         }
+         for(j=0; j<n; j++) {
+            d=sqrt(1.0e-5/B[j+n*j]);
+            t[j]=t[j]+d;
+            e_p=energy(t);
+            t[j]=t[j]-2.0*d;
+            e_m=energy(t);
+            t[j]=t[j]+d;
+            fprintf(f,"e_p[%i]=%.8f\n",j,e_p);
+            fprintf(f,"e_m[%i]=%.8f\n",j,e_m);
+            P[iter].g[j]=(e_p-e_m)/(2.0*d);
+            P[iter].h[j]=(e_p-2.0*e_0+e_m)/(d*d);
+         }
       }
       P[iter].energy=e_0;
       fprintf(f,"e_0=%.8f\n",e_0);
-      for(j=0; j<n; j++) {
-         d=sqrt(1.0e-5/B[j+n*j]);
-         t[j]=t[j]+d;
-         e_p=energy(t);
-         t[j]=t[j]-2.0*d;
-         e_m=energy(t);
-         t[j]=t[j]+d;
-         fprintf(f,"e_p[%i]=%.8f\n",j,e_p);
-         fprintf(f,"e_m[%i]=%.8f\n",j,e_m);
-         P[iter].g[j]=(e_p-e_m)/(2.0*d);
-         P[iter].h[j]=(e_p-2.0*e_0+e_m)/(d*d);
-      }
       fprintf(f,"Gradient:");
       for(i=0; i<n; i++) {fprintf(f,"%10.6f ",P[iter].g[i]);} fprintf(f,"\n");
       fprintf(f,"Hessian: ");
@@ -362,6 +401,10 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    free(t);
    free(s);
    free(h);
+   free(d_arr);
+   free(h_p);
+   free(h_m);
+   free(all_h);
 /*--------------------------------------------------------------------------*/
 /*                                                                          */
 /*--------------------------------------------------------------------------*/
