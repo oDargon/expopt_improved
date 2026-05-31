@@ -31,4 +31,5 @@ void OptimizationLog(int opt_idx) {
    else
       fprintf(SYS.logfile, "%4s  %6s  %6s  %8s  %14s  %12s  %10s  %8s\n",
          "iter","fevals","lsstp","wall(s)","energy","dE","gnorm","lambda");
+   fflush(SYS.logfile);
 }

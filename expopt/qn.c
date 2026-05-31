@@ -320,6 +320,7 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
          fprintf(SYS.logfile, "%4i  %6i  %6i  %8.1f  %14.8f  %12.8f  %10.6f  %8.4f\n",
             iter, SYS.fnc_eval-fevals_iter, fevals_ls, difftime(time(NULL),t_iter),
             e_0, (e_log_prev<1.0e11 ? e_0-e_log_prev : 0.0), gnorm, lambda);
+      fflush(SYS.logfile);
       e_log_prev=e_0;
       if(SYS.no_linesearch ? (gnorm<gthr) : ((e_0-e_1)<ethr && gnorm<gthr)) {
          fprintf(f,"Converged\n");
