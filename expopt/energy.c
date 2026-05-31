@@ -20,7 +20,6 @@ typedef struct {
 } JobRecord;
 static JobRecord *job_table  = NULL;
 static int        jobs_init   = 0;
-static int        job_counter = 0;
 static char       run_dir[4096-32];
 /*--------------------------------------------------------------------------*/
 static void init_jobs(void) {
@@ -125,7 +124,7 @@ int energy_prepare(double *s) {
       fprintf(stderr,"All job slots occupied — call energy_run first\n");
       exit(1);
    }
-   snprintf(job_table[slot].dir,sizeof(job_table[slot].dir),"%s/expopt_jobs/expopt_job_%04i",run_dir,job_counter++);
+   snprintf(job_table[slot].dir,sizeof(job_table[slot].dir),"%s/expopt_jobs/expopt_job_%04i",run_dir,slot);
    mkdir(job_table[slot].dir,0755);
    snprintf(cp_cmd,sizeof(cp_cmd),"cp %s/energy.ksh %s/",run_dir,job_table[slot].dir);
    if(system(cp_cmd)!=0) {

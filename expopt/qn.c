@@ -234,8 +234,8 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
       if(SYS.no_linesearch) {
          sg=0.0; for(i=0; i<n; i++) sg=sg+P[iter].g[i]*s[i];
          ss=0.0; for(i=0; i<n; i++) ss=ss+s[i]*s[i];
-         predicted_prev=-0.5*sg;
          lambda=(trust/sqrt(ss)<1.0) ? trust/sqrt(ss) : 1.0;
+         predicted_prev=-0.5*lambda*sg;
          fprintf(f,"lambda=%.6f\n",lambda);
          for(i=0; i<n; i++) P[iter+1].x[i]=P[iter].x[i]+lambda*s[i];
          e_1=e_0;
