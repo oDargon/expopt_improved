@@ -131,6 +131,11 @@ int energy_prepare(double *s) {
       fprintf(stderr,"Could not copy energy.ksh to job directory\n");
       exit(1);
    }
+   snprintf(cp_cmd,sizeof(cp_cmd),"cp %s/*.input %s/",run_dir,job_table[slot].dir);
+   if(system(cp_cmd)!=0) {
+      fprintf(stderr,"Could not copy *.input to job directory\n");
+      exit(1);
+   }
    snprintf(basis_path,sizeof(basis_path),"%s/BASIS.DAT",job_table[slot].dir);
    if((f=fopen(basis_path,"w"))==NULL) {
       fprintf(stderr,"Could not open %s\n",basis_path);
