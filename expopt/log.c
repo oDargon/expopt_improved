@@ -26,10 +26,10 @@ void OptimizationLog(int opt_idx) {
       gen_name[SYS.generator], meth_name[SYS.method],
       SYS.no_linesearch ? " [NoLineSearch]" : "");
    if(SYS.no_linesearch)
-      fprintf(SYS.logfile, "%4s  %6s  %8s  %14s  %12s  %10s  %8s  %8s\n",
-         "iter","fevals","wall(s)","energy","dE","gnorm","lambda","trust");
+      fprintf(SYS.logfile, "%4s  %6s  %8s  %14s  %12s  %12s  %10s  %8s  %8s\n",
+         "iter","fevals","wall(s)","energy","dE","dE_total","gnorm","lambda","trust");
    else
-      fprintf(SYS.logfile, "%4s  %6s  %6s  %8s  %14s  %12s  %10s  %8s\n",
-         "iter","fevals","lsstp","wall(s)","energy","dE","gnorm","lambda");
+      fprintf(SYS.logfile, "%4s  %6s  %6s  %8s  %14s  %12s  %12s  %10s  %8s\n",
+         "iter","fevals","lsstp","wall(s)","energy","dE","dE_total","gnorm","lambda");
    fflush(SYS.logfile);
 }

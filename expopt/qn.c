@@ -39,7 +39,7 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    double  trust;
    double  p;
    double  e_0_prev,predicted_prev,rho;
-   double  e_log_prev;
+   double  e_log_prev,e_first;
    int     fevals_iter,fevals_ls,fevals_start;
    time_t  t_iter,t_start;
    int     iter,k0;
@@ -82,6 +82,7 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    e_0_prev=1.0e12;
    predicted_prev=1.0;
    e_log_prev=1.0e12;
+   e_first=1.0e12;
    fevals_start=SYS.fnc_eval;
    t_start=time(NULL);
    iter=0;
@@ -314,14 +315,15 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
          fprintf(f,"Iter %2i: %15.8f %12.8f %12.8f\n",iter,e_0,gnorm,lambda);
       else
          fprintf(f,"Iter %2i: %15.8f %15.8f %15.8f %12.8f %12.8f %12.8f\n",iter,e_0,e_est,e_1,e_1-e_0,gnorm,lambda);
+      if(e_first>1.0e11) e_first=e_0;
       if(SYS.no_linesearch)
-         fprintf(SYS.logfile, "%4i  %6i  %8.1f  %14.8f  %12.8f  %10.6f  %8.4f  %8.4f\n",
+         fprintf(SYS.logfile, "%4i  %6i  %8.1f  %14.8f  %12.8f  %12.8f  %10.6f  %8.4f  %8.4f\n",
             iter, SYS.fnc_eval-fevals_iter, difftime(time(NULL),t_iter),
-            e_0, (e_log_prev<1.0e11 ? e_0-e_log_prev : 0.0), gnorm, lambda, trust);
+            e_0, (e_log_prev<1.0e11 ? e_0-e_log_prev : 0.0), e_0-e_first, gnorm, lambda, trust);
       else
-         fprintf(SYS.logfile, "%4i  %6i  %6i  %8.1f  %14.8f  %12.8f  %10.6f  %8.4f\n",
+         fprintf(SYS.logfile, "%4i  %6i  %6i  %8.1f  %14.8f  %12.8f  %12.8f  %10.6f  %8.4f\n",
             iter, SYS.fnc_eval-fevals_iter, fevals_ls, difftime(time(NULL),t_iter),
-            e_0, (e_log_prev<1.0e11 ? e_0-e_log_prev : 0.0), gnorm, lambda);
+            e_0, (e_log_prev<1.0e11 ? e_0-e_log_prev : 0.0), e_0-e_first, gnorm, lambda);
       fflush(SYS.logfile);
       e_log_prev=e_0;
       if(SYS.no_linesearch ? (gnorm<gthr) : ((e_0-e_1)<ethr && gnorm<gthr)) {
