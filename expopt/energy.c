@@ -30,7 +30,9 @@ double energy(double *s) {
          if(n==0) {
             fprintf(f," 0 0\n");
          } else {
-            fprintf(f," %i %i\n",n,n);
+            int frozen = SYS.contract_frozen && (l != SYS.active);
+            int nc     = frozen ? SYS.basis[l].m : n;
+            fprintf(f," %i %i\n",n,nc);
             for(k=0; k<n; k++) {
                z=SYS.basis[l].z[k];
                if(SYS.active==l) {
@@ -38,12 +40,19 @@ double energy(double *s) {
                }
                fprintf(f,"%.8f\n",z);
             }
-            for(k=0; k<n; k++) {
-               for(m=0; m<n; m++) {
-                  if(k==m) fprintf(f,"1. ");
-                  else     fprintf(f,"0. ");
+            if(frozen) {
+               for(k=0; k<nc; k++) {
+                  for(m=0; m<n; m++) fprintf(f,"%.8f ",SYS.basis[l].c[k*n+m]);
+                  fprintf(f,"\n");
                }
-               fprintf(f,"\n");
+            } else {
+               for(k=0; k<n; k++) {
+                  for(m=0; m<n; m++) {
+                     if(k==m) fprintf(f,"1. ");
+                     else     fprintf(f,"0. ");
+                  }
+                  fprintf(f,"\n");
+               }
             }
          }
       }

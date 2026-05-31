@@ -23,7 +23,7 @@ void input_control(FILE *iu, FILE *ou) {
    double  e;
    int     ind[128];
    int     line_no;
-   int     Z,l,n;
+   int     Z,l,n,m;
    int     k;
 /*--------------------------------------------------------------------------*/
 /*                                                                          */
@@ -51,6 +51,7 @@ void input_control(FILE *iu, FILE *ou) {
          tok=strtok(line," \n"); Z=atoi(tok);
          tok=strtok(NULL," \n"); l=atoi(tok);
          tok=strtok(NULL," \n"); n=atoi(tok);
+         tok=strtok(NULL," \n"); m=atoi(tok);
          if(l>MAX_LQN) {
             fprintf(stderr,"Max. l-q.n. exceeded\n");
             exit(1);
@@ -58,11 +59,14 @@ void input_control(FILE *iu, FILE *ou) {
          SYS.basis[l].Z=Z;
          SYS.basis[l].l=l;
          SYS.basis[l].n=n;
+         SYS.basis[l].m=m;
          if(SYS.basis[l].z!=NULL) {
             fprintf(ou,"Freeing shell %i\n",l);
             free(SYS.basis[l].z);
          }
+         if(SYS.basis[l].c!=NULL) free(SYS.basis[l].c);
          SYS.basis[l].z=(double *)malloc(n*sizeof(double));
+         SYS.basis[l].c=(double *)malloc(m*n*sizeof(double));
          for(k=0; k<n; k++) {
             tok=strtok(NULL," \n");
             if(tok==NULL) {
@@ -70,6 +74,20 @@ void input_control(FILE *iu, FILE *ou) {
                tok=strtok(line," \n");
             }
             SYS.basis[l].z[k]=atof(tok);
+         }
+         if(m==n) {
+            for(k=0; k<m; k++)
+               for(int j=0; j<n; j++)
+                  SYS.basis[l].c[k*n+j]=(k==j) ? 1.0 : 0.0;
+         } else {
+            for(k=0; k<m*n; k++) {
+               tok=strtok(NULL," \n");
+               if(tok==NULL) {
+                  GETLINE
+                  tok=strtok(line," \n");
+               }
+               SYS.basis[l].c[k]=atof(tok);
+            }
          }
 /*
    Print current basis set
@@ -81,11 +99,17 @@ void input_control(FILE *iu, FILE *ou) {
                fprintf(ou,"    %2i ",SYS.basis[l].Z);
                fprintf(ou,"%2i ",SYS.basis[l].l);
                fprintf(ou,"%2i ",SYS.basis[l].n);
+               fprintf(ou,"%2i ",SYS.basis[l].m);
                for(k=0; k<SYS.basis[l].n; k++) {
                   if( (k!=0) && ((k%5)==0) ) fprintf(ou,"\n             ");
                   fprintf(ou,"%.6f ",SYS.basis[l].z[k]);
                }
                fprintf(ou,"\n");
+               for(m=0; m<SYS.basis[l].m; m++) {
+                  fprintf(ou,"    ");
+                  for(k=0; k<SYS.basis[l].n; k++) fprintf(ou,"%.6f ",SYS.basis[l].c[m*SYS.basis[l].n+k]);
+                  fprintf(ou,"\n");
+               }
             }
          }
 /*
@@ -209,6 +233,16 @@ void input_control(FILE *iu, FILE *ou) {
 */
       } else if(strcmp(tok,"PrintRaw")==0) {
          SYS.printraw=1;
+/*
+   Contract frozen shells during optimization
+*/
+      } else if(strcmp(tok,"ContractFrozen")==0) {
+         SYS.contract_frozen=1;
+/*
+   Skip line search in QN, use trust-region step only
+*/
+      } else if(strcmp(tok,"NoLineSearch")==0) {
+         SYS.no_linesearch=1;
 /*
    Set the penalty function
 */

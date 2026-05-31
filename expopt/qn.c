@@ -37,6 +37,7 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    double  gnorm;
    double  trust;
    double  p;
+   double  e_0_prev,predicted_prev,rho;
    int     iter,k0;
    int     np;
    int     i,j,k;
@@ -74,10 +75,23 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
 /*--------------------------------------------------------------------------*/
    fprintf(f,"Iter            E(0)            E(est)          E(1)           dE          gnorm        l.s.   \n");
    fprintf(f,"Iter       -------------   -------------   -------------  -----------   ----------   ----------\n");
+   e_0_prev=1.0e12;
+   predicted_prev=1.0;
    iter=0;
-   e_0=energy(P[0].x);
+   if(!SYS.no_linesearch) e_0=energy(P[0].x);
    while(iter<MAX_ITER) {
       for(i=0; i<n; i++) t[i]=P[iter].x[i];
+      if(SYS.no_linesearch) {
+         e_0=energy(P[iter].x);
+         if(iter>0) {
+            rho=(e_0_prev-e_0)/predicted_prev;
+            fprintf(f,"rho=%.6f trust=%.6f\n",rho,trust);
+            if(rho<0.0)       trust*=0.25;
+            else if(rho<0.25) trust*=0.50;
+            else if(rho>0.75) trust=fmin(2.0*trust,2.0);
+         }
+         e_0_prev=e_0;
+      }
       P[iter].energy=e_0;
       fprintf(f,"e_0=%.8f\n",e_0);
       for(j=0; j<n; j++) {
@@ -105,18 +119,27 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
       if(k0<0) k0=0;
       for(k=k0; k<=iter; k++) {
          if(k==k0) {
+            if(SYS.no_linesearch) {
+               for(i=0; i<n; i++) {
+                  for(j=0; j<n; j++) B[i+n*j]=0.0;
+                  p=P[k0].h[i];
+                  if(p<1.0e-4) p=1.0e-4;
+                  B[i+n*i]=p;
+               }
+            } else {
 #ifdef GUESS
-            guessian(B,P[k0].h,n,f);
+               guessian(B,P[k0].h,n,f);
 #else
-            hBig=0.0;
-            for(i=0; i<n; i++) if(hBig<P[k0].h[i]) hBig=P[k0].h[i];
-            for(i=0; i<n; i++) {
-               p=P[k0].h[i];
-               if(p<1.0e-3*hBig) p=1.0e-3*hBig;
-               for(j=0; j<n; j++) B[i+n*j]=0.0;
-               B[i+n*i]=p;
-            }
+               hBig=0.0;
+               for(i=0; i<n; i++) if(hBig<P[k0].h[i]) hBig=P[k0].h[i];
+               for(i=0; i<n; i++) {
+                  p=P[k0].h[i];
+                  if(p<1.0e-3*hBig) p=1.0e-3*hBig;
+                  for(j=0; j<n; j++) B[i+n*j]=0.0;
+                  B[i+n*i]=p;
+               }
 #endif
+            }
          } else {
             for(i=0; i<n; i++) {
                p=0.0;
@@ -153,6 +176,15 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
       fprintf(f,"Step:    ");
       for(i=0; i<n; i++) {fprintf(f,"%10.6f ",s[i]);} fprintf(f,"\n");
 
+      if(SYS.no_linesearch) {
+         sg=0.0; for(i=0; i<n; i++) sg=sg+P[iter].g[i]*s[i];
+         ss=0.0; for(i=0; i<n; i++) ss=ss+s[i]*s[i];
+         predicted_prev=-0.5*sg;
+         lambda=(trust/sqrt(ss)<1.0) ? trust/sqrt(ss) : 1.0;
+         fprintf(f,"lambda=%.6f\n",lambda);
+         for(i=0; i<n; i++) P[iter+1].x[i]=P[iter].x[i]+lambda*s[i];
+         e_1=e_0;
+      } else {
 #ifdef NEWLS
       sg=0.0; for(i=0; i<n; i++) sg=sg+P[iter].g[i]*s[i];
       ss=0.0; for(i=0; i<n; i++) ss=ss+s[i]*s[i];
@@ -265,14 +297,18 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
          fprintf(f,"e_1=%.8f\n",e_1);
       }
 #endif
+      } /* end else (line search) */
       for(i=0; i<n; i++) x[i]=P[iter+1].x[i];
 
-      fprintf(f,"Iter %2i: %15.8f %15.8f %15.8f %12.8f %12.8f %12.8f\n",iter,e_0,e_est,e_1,e_1-e_0,gnorm,lambda);
-      if( ((e_0-e_1)<ethr) && (gnorm<gthr) ) {
+      if(SYS.no_linesearch)
+         fprintf(f,"Iter %2i: %15.8f %12.8f %12.8f\n",iter,e_0,gnorm,lambda);
+      else
+         fprintf(f,"Iter %2i: %15.8f %15.8f %15.8f %12.8f %12.8f %12.8f\n",iter,e_0,e_est,e_1,e_1-e_0,gnorm,lambda);
+      if(SYS.no_linesearch ? (gnorm<gthr) : ((e_0-e_1)<ethr && gnorm<gthr)) {
          fprintf(f,"Converged\n");
          break;
       };
-      e_0=e_1;
+      if(!SYS.no_linesearch) e_0=e_1;
       iter++;
    }
    e_0=e_1;

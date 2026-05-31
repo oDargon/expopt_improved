@@ -27,8 +27,9 @@
 /* Typedefs                                                                 */
 /*--------------------------------------------------------------------------*/
 typedef struct {
-   int      Z,l,n;
+   int      Z,l,n,m;
    double  *z;
+   double  *c;
 } shell;
 typedef struct {
    double  charge;
@@ -50,6 +51,8 @@ typedef struct {
    int    *index;
    int     printthis;
    int     printraw;
+   int     contract_frozen;
+   int     no_linesearch;
    shell   basis[MAX_LQN+1];
    double  directions[MAX_DIR*MAX_DIR];
 } sysdef;

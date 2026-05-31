@@ -43,13 +43,17 @@ int main(int argc, char *argv[]) {
    SYS.active    = -1;
    SYS.n_dir     = 0;
    SYS.index     = NULL;
-   SYS.printthis = -1;
-   SYS.printraw  = 0;
+   SYS.printthis       = -1;
+   SYS.printraw        = 0;
+   SYS.contract_frozen = 0;
+   SYS.no_linesearch   = 0;
    for(i=0; i<=MAX_LQN; i++) {
       SYS.basis[i].Z=0;
       SYS.basis[i].l=0;
       SYS.basis[i].n=0;
+      SYS.basis[i].m=0;
       SYS.basis[i].z=NULL;
+      SYS.basis[i].c=NULL;
    }
 /*--------------------------------------------------------------------------*/
 /*                                                                          */
