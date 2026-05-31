@@ -27,6 +27,8 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    double *t;
    double *s;
    double *h;
+   double *d_arr;
+   int    *h_p,*h_m,*all_h;
 #ifndef NEWLS
    double  gamma,hBig;
 #endif
@@ -63,6 +65,10 @@ void quasi_newton(double x[], int n, double ethr, double gthr, FILE *f) {
    t=(double *)malloc(n*sizeof(double));
    s=(double *)malloc(n*sizeof(double));
    h=(double *)malloc(n*sizeof(double));
+   d_arr=(double *)malloc(n*sizeof(double));
+   h_p  =(int    *)malloc(n*sizeof(int));
+   h_m  =(int    *)malloc(n*sizeof(int));
+   all_h=(int    *)malloc(2*n*sizeof(int));
 /*--------------------------------------------------------------------------*/
 /* Initialize.                                                              */
 /*--------------------------------------------------------------------------*/

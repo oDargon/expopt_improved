@@ -55,6 +55,7 @@ typedef struct {
    int     no_linesearch;
    int     opt_count;
    FILE   *logfile;
+   int     max_jobs;
    shell   basis[MAX_LQN+1];
    double  directions[MAX_DIR*MAX_DIR];
 } sysdef;
@@ -66,6 +67,9 @@ extern sysdef    SYS;
 /* external functions.                                                      */
 /*--------------------------------------------------------------------------*/
 extern void    input_control(FILE *, FILE *);
+extern int     energy_prepare(double *);
+extern void    energy_run(int *, int);
+extern double  energy_collect(int);
 extern double  energy(double *);
 extern void    optimize(int, int *, int, FILE *);
 extern void    amoeba(double *, int, double, FILE *);

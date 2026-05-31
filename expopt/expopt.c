@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
    SYS.no_linesearch   = 0;
    SYS.opt_count       = 0;
    SYS.logfile         = NULL;
+   SYS.max_jobs  = 1;
    for(i=0; i<=MAX_LQN; i++) {
       SYS.basis[i].Z=0;
       SYS.basis[i].l=0;

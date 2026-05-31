@@ -293,6 +293,9 @@ void input_control(FILE *iu, FILE *ou) {
 /*
    Extend shell
 */
+      } else if(strcmp(tok,"Multithread")==0) {
+         tok=strtok(NULL," \n"); SYS.max_jobs=atoi(tok);
+         if(SYS.max_jobs<1) SYS.max_jobs=1;
       } else if(strcmp(tok,"Extend")==0) {
          tok=strtok(NULL," \n"); l=atof(tok);
          tok=strtok(NULL," \n"); n=atof(tok);
